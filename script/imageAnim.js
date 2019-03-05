@@ -34,7 +34,7 @@
 	dropZones.forEach(zone => {
 		zone.addEventListener("dragover", function(e) {
 			e.preventDefault();
-			console.log("You dropped over me!");
+			console.log("You're dragging something over me!");
 		});
 
 		zone.addEventListener("drop", function(e) {
@@ -42,16 +42,29 @@
 			console.log("You dropped something on me!");
 
 			let piece = e.dataTransfer.getData("text/plain");
-			e.target.appendChild(document.querySelector(`#${piece}`));
+
+			// bug 1 - if else function for the dropzone to make sure a piece cannot be dropped on top of another one that is already dropped on the gameboard.
+			if (!zone.innerHTML) {
+				e.target.appendChild(document.querySelector(`#${piece}`)); //one piece is dropped
+				console.log("Are you sure that piece fits there? :)")
+			} else {
+				return;
+			}
+			//alternate solution - set the property's child to IF greater than 0;
 		});
 	})
 
 	//drag and drop functionality goes here
 
 	function resetPuzzlePieces(){
+
 		// debugger;
 		piecesBoard.innerHTML = "";
 		createPuzzlepieces(this.dataset.puzzleref)
+	dropZones.forEach(zone => {
+		zone.innerHTML = "";
+	//bug 2 - reset the puzzles back to their place when the game board is switched
+	});
 	}
 
 	puzzleSelectors.forEach(puzzle => puzzle.addEventListener("click", resetPuzzlePieces));
